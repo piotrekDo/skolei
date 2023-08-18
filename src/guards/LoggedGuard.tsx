@@ -2,9 +2,9 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import useUserStore from '../service/useUserStore';
 
-export const AdminGuard = ({ children }: React.PropsWithChildren) => {
+export const LoggedGuard = ({ children }: React.PropsWithChildren) => {
   const { appUser } = useUserStore();
-
+  
   if (!appUser) {
     return <Navigate to={'/'} replace />;
   }
@@ -12,4 +12,4 @@ export const AdminGuard = ({ children }: React.PropsWithChildren) => {
   return <>{children}</>;
 };
 
-export default AdminGuard;
+export default LoggedGuard;

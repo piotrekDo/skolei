@@ -4,7 +4,7 @@ import useUserStore from '../service/useUserStore';
 
 export const AuthenticatedGuard = ({ children }: React.PropsWithChildren) => {
   const { appUser } = useUserStore();
-
+  
   if (appUser) {
     return <Navigate to={'/home'} replace />;
   }

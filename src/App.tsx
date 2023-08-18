@@ -7,6 +7,7 @@ import LoginService, { checkIfTokenIsValid } from './service/LoginService';
 import { ToastWithCountdown } from './components/ToastWithCountdown';
 import useAppEvents from './hooks/useAppEvents';
 import useErrorStore from './service/useErrorState';
+import APIclient from './service/APIclient';
 
 export const App = () => {
   const { subscribe } = useAppEvents();
@@ -14,24 +15,17 @@ export const App = () => {
   const { error } = useErrorStore();
   const toast = useToast();
 
-  useEffect(() => {
-    if(!error) return;
-    toast({
-        title: `An error ${error?.code}`,
-        description: `${error?.details}`,
-        status: 'error',
-        duration: 9000,
-        position: 'top-left',
-        isClosable: true,
-      })
-  }, [error]);
-
-  useEffect(() => {
-    if (!appUser) return;
-    if (checkIfTokenIsValid(appUser)) {
-      subscribe();
+  APIclient.interceptors.request.use(
+    (config) => {
+      if (appUser?.jwtToken) {
+        config.headers['Authorization'] = `Bearer ${appUser?.jwtToken}`;
+      }
+      return config;
+    },
+    (error) => {
+      Promise.reject(error);
     }
-  }, [appUser]);
+  );
 
   useEffect(() => {
     const appUser = LoginService.checkAutoLogin((mils: number) => {
@@ -47,6 +41,26 @@ export const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!appUser) return;
+    if (checkIfTokenIsValid(appUser)) {
+      subscribe();
+    }
+  }, [appUser]);
+
+  useEffect(() => {
+    if(!error) return;
+
+    toast({
+        title: `An error ${error?.code}`,
+        description: `${error.details}`,
+        status: 'error',
+        duration: 9000,
+        position: 'top-left',
+        isClosable: true,
+      })
+  }, [error]);
+
   return (
     <Box>
       {appUser && (
@@ -54,7 +68,7 @@ export const App = () => {
           <Navbar />
         </Box>
       )}
-      <Box bg={'facebook.500'} h='calc(100vh - 50px)'>
+      <Box bg={'facebook.500'} minH='calc(100vh - 50px)'>
         <Outlet />
       </Box>
     </Box>

@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import useUserStore from '../service/useUserStore';
+import { NavLink } from 'react-router-dom';
 
 export default function Navbar() {
   const toast = useToast();
@@ -26,9 +27,11 @@ export default function Navbar() {
 
   if (!appUser) return null;
 
+  const isModerator: boolean = appUser.userRoles.findIndex(val => val === 'MODERATOR') > -1;
+
   return (
     <>
-      <Box color={'white'} bg={'facebook.600'} px={{ base: 1, sm: 10 }}>
+      <Box color={'white'} bg={'facebook.600'} px={{ base: 1, sm: 10 }} >
         <Flex h={'50px'} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -40,11 +43,13 @@ export default function Navbar() {
           <HStack spacing={8} w={'200vw'}>
             <Box>Logo</Box>
             <HStack as={'nav'} spacing={4} px={{ base: 20 }} display={{ base: 'none', md: 'flex' }}>
-              <Box as={Link}>Dashboard</Box>
+              {isModerator && <NavLink to={'/users'}>Użytkownicy</NavLink>}
               <Menu>
-                <MenuButton>Projekty</MenuButton>
+                <MenuButton>Wnioski</MenuButton>
                 <MenuList bg={'facebook.700'}>
-                  <MenuItem as={Link}>Text extractor</MenuItem>
+                  <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-new'>Nowy</MenuItem>
+                  <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-history'>Historia</MenuItem>
+                  {isModerator && <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications'>Zaakaceptuj</MenuItem>}
                 </MenuList>
               </Menu>
             </HStack>
@@ -66,10 +71,14 @@ export default function Navbar() {
                 </Text>
                 <MenuDivider />
                 <Box py={2} px={5}>
-                  <Button colorScheme='messenger' w={'100%'} onClick={() => {
-                    toast.closeAll();
-                    logout();
-                  }}>
+                  <Button
+                    colorScheme='messenger'
+                    w={'100%'}
+                    onClick={() => {
+                      toast.closeAll();
+                      logout();
+                    }}
+                  >
                     Wyloguj
                   </Button>
                 </Box>

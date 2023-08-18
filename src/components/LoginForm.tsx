@@ -46,7 +46,6 @@ export const LoginForm = () => {
             render: () => <ToastWithCountdown timeInSeconds={60} />,
           });
         });
-        console.log(res.data);
       })
       .catch(err => {
         if (err.response && err.response.data) {

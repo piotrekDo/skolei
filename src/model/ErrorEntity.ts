@@ -1,5 +1,5 @@
 export interface ErrorEntity {
   code: number;
   message: string;
-  details: string;
+  details: string | string[];
 }
