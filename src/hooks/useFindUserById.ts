@@ -6,7 +6,7 @@ const useFindUserById = (userId: number) => {
   return useQuery<UserDtoRaw, Error>({
     queryKey: ['user', userId],
     queryFn: () => UserService.getUserById(userId),
-    staleTime: 10 * 1000, //10sec
+    // staleTime: 10 * 1000, //10sec
   });
 };
 

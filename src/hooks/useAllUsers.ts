@@ -3,11 +3,11 @@ import { Page } from "../model/Page";
 import { UserDtoRaw } from "../model/AppUser";
 import UserService from "../service/UserService";
 
-const useAllUsers = (pageSize: number ) => {
+const useAllUsers = (pageSize: number) => {
     return useInfiniteQuery<Page<UserDtoRaw>, Error>({
         queryKey: ['users'],
         queryFn: ({pageParam = 1}) => UserService.getAllUsers({page: pageParam -1, pageSize: pageSize}),
-        staleTime: 1 * 60 * 1000, // 1mminuta
+        staleTime: 1 * 60 * 1000, 
         keepPreviousData: true,
         getNextPageParam: (lastPage, allPages) => {
             console.log(lastPage.number)

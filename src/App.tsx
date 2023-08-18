@@ -68,7 +68,7 @@ export const App = () => {
           <Navbar />
         </Box>
       )}
-      <Box bg={'facebook.500'} minH='calc(100vh - 50px)'>
+      <Box bg={'facebook.500'} minH='calc(100vh - 50px)' p={5}>
         <Outlet />
       </Box>
     </Box>
