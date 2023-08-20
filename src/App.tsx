@@ -1,5 +1,5 @@
 import { Box, useToast } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import useUserStore from './service/useUserStore';
@@ -8,21 +8,27 @@ import { ToastWithCountdown } from './components/ToastWithCountdown';
 import useAppEvents from './hooks/useAppEvents';
 import useErrorStore from './service/useErrorState';
 import APIclient from './service/APIclient';
+import { BASE_URL } from './config';
 
 export const App = () => {
-  const { subscribe } = useAppEvents();
+  const [userEmail, setUserEmail] = useState('');
+  const { subscribe, unsubscribe } = useAppEvents();
   const { appUser, login } = useUserStore();
   const { error } = useErrorStore();
   const toast = useToast();
+  const appUserRef = useRef(appUser);
 
   APIclient.interceptors.request.use(
-    (config) => {
-      if (appUser?.jwtToken) {
-        config.headers['Authorization'] = `Bearer ${appUser?.jwtToken}`;
+    config => {
+      if (appUserRef.current && appUserRef.current.jwtToken) {
+        config.headers['Authorization'] = `Bearer ${appUserRef.current?.jwtToken}`;
+      } else {
+        console.log('error konfiguracji interceptor');
+        console.log(appUserRef.current)
       }
       return config;
     },
-    (error) => {
+    error => {
       Promise.reject(error);
     }
   );
@@ -37,28 +43,39 @@ export const App = () => {
       });
     });
     if (appUser) {
+      appUserRef.current = appUser;
       login(appUser);
     }
   }, []);
 
   useEffect(() => {
-    if (!appUser) return;
+    if (!appUser) {
+      unsubscribe();
+      if(userEmail === '') return;
+      const data = new FormData();
+      data.append('userEmail', userEmail);
+      navigator.sendBeacon(`${BASE_URL}/sse/unsubscribe`, data);
+      setUserEmail('');
+      return;
+    }
     if (checkIfTokenIsValid(appUser)) {
+      appUserRef.current = appUser;
+      setUserEmail(appUser.userEmail);
       subscribe();
     }
   }, [appUser]);
 
   useEffect(() => {
-    if(!error) return;
+    if (!error) return;
 
     toast({
-        title: `An error ${error?.code}`,
-        description: `${error.details}`,
-        status: 'error',
-        duration: 9000,
-        position: 'top-left',
-        isClosable: true,
-      })
+      title: `An error ${error?.code}`,
+      description: `${error.details}`,
+      status: 'error',
+      duration: 9000,
+      position: 'top-left',
+      isClosable: true,
+    });
   }, [error]);
 
   return (
@@ -68,7 +85,7 @@ export const App = () => {
           <Navbar />
         </Box>
       )}
-      <Box bg={'facebook.500'} minH='calc(100vh - 50px)' p={5}>
+      <Box bg={'facebook.500'} minH={appUser ? 'calc(100vh - 50px)' : '100vh'} p={5}>
         <Outlet />
       </Box>
     </Box>

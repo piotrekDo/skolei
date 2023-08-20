@@ -1,18 +1,9 @@
 import useUserStore from '../service/useUserStore';
 import { FieldValues, useForm } from 'react-hook-form';
-import {
-  Box,
-  Stack,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Select,
-} from '@chakra-ui/react';
+import { Box, Stack, FormControl, FormLabel, Input, Button, Select } from '@chakra-ui/react';
 import useSupervisors from '../hooks/useSupervisors';
 import usePtoRequest from '../hooks/usePtoRequest';
-
-
+import { useEffect, useState } from 'react';
 
 interface FormData {
   ptoStart: string;
@@ -22,17 +13,38 @@ interface FormData {
 }
 
 export const PtoRequestForm = () => {
-  const {submit, isSubmitting} = usePtoRequest();
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [dateInvalid, setDateInvalid] = useState(false);
+  const { submit, isSubmitting } = usePtoRequest();
   const { appUser } = useUserStore();
   const { data, isFetching } = useSupervisors(appUser!.userId);
   const {
     register,
     handleSubmit,
     reset,
+    getValues,
+    formState: { isValid: formValid },
   } = useForm<FormData>();
 
+  useEffect(() => {
+    validateDates();
+  }, [startDate, endDate]);
+
   const onSubmit = (dataFields: FieldValues) => {
-    submit(dataFields, reset)
+    submit(dataFields, reset);
+  };
+
+  const validateDates = () => {
+    setDateInvalid(false);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return;
+    }
+    if (start.getTime() > end.getTime()) {
+      setDateInvalid(true);
+    }
   };
 
   return (
@@ -40,11 +52,22 @@ export const PtoRequestForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <FormLabel>Dzień rozpoczęcia urlopu:</FormLabel>
-          <Input type='date' {...register('ptoStart', {required: true})} />
+          <Input
+            type='date'
+            {...register('ptoStart', { required: true, onChange: e => setStartDate(e.target.value) })}
+          />
         </FormControl>
         <FormControl>
           <FormLabel>Ostatni dzień urlopu:</FormLabel>
-          <Input type='date' {...register('ptoEnd', {required: true})} />
+          <Input
+            type='date'
+            {...register('ptoEnd', {
+              required: true,
+              onChange: e => {
+                setEndDate(e.target.value);
+              },
+            })}
+          />
         </FormControl>
         <FormControl>
           <FormLabel>Przełożony:</FormLabel>
@@ -67,7 +90,7 @@ export const PtoRequestForm = () => {
           <Input type='number' {...register('daysTotal', { valueAsNumber: true, required: true })} />
         </FormControl>
         <Stack spacing={10} p={2}>
-          <Button isLoading={isSubmitting} type='submit' w={'100%'}>
+          <Button isDisabled={!formValid || dateInvalid} isLoading={isSubmitting} type='submit' w={'100%'}>
             Wyślij
           </Button>
         </Stack>

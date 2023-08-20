@@ -59,10 +59,10 @@ export const LoginForm = () => {
   errors.userEmail || (errors.userPassword && console.log(errors));
 
   return (
-    <Box>
+    <Box h={'100%'}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex align={'center'} h={'100vh'} justify={'center'} bg={'facebook.400'} color={'whiteAlpha.900'}>
-          <Stack spacing={5} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Flex align={'center'} h={'100%'} justify={'center'} color={'whiteAlpha.900'}>
+          <Stack spacing={5} mx={'auto'} >
             <Stack align={'center'}>
               <Heading fontSize={'4xl'}>Zaloguj się</Heading>
               <Text fontSize={'lg'} color={'gray.600'}></Text>

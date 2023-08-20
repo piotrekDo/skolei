@@ -26,3 +26,9 @@ export interface PtoRaw {
   durationInDays: number;
   declineReason: string | undefined;
 }
+
+export interface PtoResolve {
+  ptoRequestId: number;
+  isAccepted: boolean;
+  declineReason?: string;
+}

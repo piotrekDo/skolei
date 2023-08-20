@@ -1,5 +1,5 @@
 import { Page, PageQuery } from '../model/Page';
-import { PtoRaw } from '../model/Pto';
+import { PtoRaw, PtoResolve } from '../model/Pto';
 import APIclient from './APIclient';
 
 class PtoService {
@@ -13,6 +13,20 @@ class PtoService {
     }).then(res => {
       return res.data;
     });
+  }
+
+  getAllRequestsToAccept(acceptorId: number) {
+    return APIclient.get<PtoRaw[]>('/pto/request-to-accept', {
+      params: {
+        acceptorId: acceptorId,
+      },
+    }).then(res => {
+      return res.data;
+    });
+  }
+
+  resolvePtoRequest(resolve: PtoResolve) {
+    return APIclient.post<PtoRaw>('/pto/resolve-request', resolve).then(res => res.data);
   }
 }
 export default new PtoService();

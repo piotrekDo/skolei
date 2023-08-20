@@ -8,6 +8,8 @@ import { AppUsersPage } from './pages/AppUsersPage';
 import { Applications } from './pages/Applications';
 import { NewPtoRequestPage } from './pages/NewPtoRequestPage';
 import { RequestHistory } from './pages/RequestHistory';
+import { RequestsResolvePage } from './pages/RequestsResolvePage';
+import { ModeratorGuard } from './guards/ModeratorGuard';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,7 @@ const router = createBrowserRouter([
       { path: 'applications', element: <LoggedGuard><Applications /></LoggedGuard> },
       { path: 'applications-new', element: <LoggedGuard><NewPtoRequestPage /></LoggedGuard> },
       { path: 'applications-history', element: <LoggedGuard><RequestHistory /></LoggedGuard> },
+      { path: 'applications-resolve', element: <ModeratorGuard><RequestsResolvePage /></ModeratorGuard> },
     ],
   },
 ]);

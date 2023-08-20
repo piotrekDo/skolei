@@ -26,7 +26,6 @@ class LoginService {
 }
 
 export function checkIfTokenIsValid(appUser: AuthenticationResponse): boolean {
-  console.log(appUser.jwtExpiresAtTimestamp - new Date().getDate() - 900000)
   return (appUser.jwtExpiresAtTimestamp - new Date().getDate() - 900000) > 0;
 }
 
@@ -40,7 +39,6 @@ function setLogoutTimer(appUser: AuthenticationResponse, logoutCallback: (mils: 
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
-  console.log(`${hours}h ${minutes}m ${remainingSeconds}s`);
   setTimeout(() => {
     logoutCallback(Math.floor(milliseconds / 1000));
   }, milliseconds - 60000);

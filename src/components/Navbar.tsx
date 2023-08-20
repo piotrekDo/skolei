@@ -49,7 +49,7 @@ export default function Navbar() {
                 <MenuList bg={'facebook.700'}>
                   <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-new'>Nowy</MenuItem>
                   <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-history'>Historia</MenuItem>
-                  {isModerator && <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications'>Zaakaceptuj</MenuItem>}
+                  {isModerator && <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-resolve'>Zaakaceptuj</MenuItem>}
                 </MenuList>
               </Menu>
             </HStack>
