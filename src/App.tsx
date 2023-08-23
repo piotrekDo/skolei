@@ -22,9 +22,6 @@ export const App = () => {
     config => {
       if (appUserRef.current && appUserRef.current.jwtToken) {
         config.headers['Authorization'] = `Bearer ${appUserRef.current?.jwtToken}`;
-      } else {
-        console.log('error konfiguracji interceptor');
-        console.log(appUserRef.current)
       }
       return config;
     },

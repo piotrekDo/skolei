@@ -15,13 +15,18 @@ import {
   Stack,
   Link,
   useToast,
+  Tooltip,
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { IoNotificationsOutline, IoNotificationsSharp } from 'react-icons/io5';
 import useUserStore from '../service/useUserStore';
 import { NavLink } from 'react-router-dom';
+import useAppNotificationsStore from '../service/useAppNotificationsStore';
+import { NewPtoRequestEvent, PtoRequestResolvedEvent } from '../model/Notification';
 
 export default function Navbar() {
   const toast = useToast();
+  const { notifications } = useAppNotificationsStore();
   const { appUser, logout } = useUserStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -31,7 +36,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Box color={'white'} bg={'facebook.600'} px={{ base: 1, sm: 10 }} >
+      <Box color={'white'} bg={'facebook.600'} px={{ base: 1, sm: 10 }}>
         <Flex h={'50px'} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -47,17 +52,63 @@ export default function Navbar() {
               <Menu>
                 <MenuButton>Wnioski</MenuButton>
                 <MenuList bg={'facebook.700'}>
-                  <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-new'>Nowy</MenuItem>
-                  <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-history'>Historia</MenuItem>
-                  {isModerator && <MenuItem bg={'facebook.700'} _hover={{bg: 'facebook.500'}} as={NavLink} to='applications-resolve'>Zaakaceptuj</MenuItem>}
+                  <MenuItem bg={'facebook.700'} _hover={{ bg: 'facebook.500' }} as={NavLink} to='applications-new'>
+                    Nowy
+                  </MenuItem>
+                  <MenuItem bg={'facebook.700'} _hover={{ bg: 'facebook.500' }} as={NavLink} to='applications-history'>
+                    Historia
+                  </MenuItem>
+                  {isModerator && (
+                    <MenuItem
+                      bg={'facebook.700'}
+                      _hover={{ bg: 'facebook.500' }}
+                      as={NavLink}
+                      to='applications-resolve'
+                    >
+                      Zaakaceptuj
+                    </MenuItem>
+                  )}
                 </MenuList>
               </Menu>
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Button variant={'solid'} colorScheme={'teal'} size={'sm'} mr={4} leftIcon={<AddIcon />}>
-              Action
-            </Button>
+            <Box mx={10}>
+              {notifications.length === 0 && (
+                <Tooltip label='Nie masz nowych powiadomień'>
+                  <Box>
+                    <IoNotificationsOutline size={'2rem'} />
+                  </Box>
+                </Tooltip>
+              )}
+              {notifications.length > 0 && (
+                <Menu>
+                  <MenuButton>
+                    <IoNotificationsSharp size={'2rem'} />
+                  </MenuButton>
+                  <MenuList bg={'facebook.700'}>
+                    {notifications.map((n, index) => (
+                      <Box key={index}>
+                        {n.id === 'NEW_PTO_REQUEST' && (
+                          <Box fontSize={'.8rem'}>
+                            Nowy wniosek {(n as NewPtoRequestEvent).applierFirstName}{' '}
+                            {(n as NewPtoRequestEvent).applierLastName}
+                          </Box>
+                        )}
+                        {n.id === 'PTO_REQUEST_RESOLVED' && (
+                          <Box fontSize={'.8rem'}>
+                            Urlop w dniach {(n as PtoRequestResolvedEvent).ptoStart} -{' '}
+                            {(n as PtoRequestResolvedEvent).ptoEnd} został{' '}
+                            {(n as PtoRequestResolvedEvent).accepted ? 'zaakceptowany' : 'odrzucony'}
+                          </Box>
+                        )}
+                      </Box>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )}
+            </Box>
+
             <Menu>
               <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                 <Avatar size={'sm'} src={''} />

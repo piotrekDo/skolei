@@ -3,9 +3,12 @@ import { BASE_URL } from '../config';
 import useUserStore from '../service/useUserStore';
 import useErrorStore from '../service/useErrorState';
 import { checkIfTokenIsValid } from '../service/LoginService';
+import { NewPtoRequestEvent, PtoRequestResolvedEvent, SseEvent } from '../model/Notification';
+import useAppNotificationsStore from '../service/useAppNotificationsStore';
 
 const useAppEvents = () => {
   const { appUser } = useUserStore();
+  const addNotification = useAppNotificationsStore(s => s.addNotification);
   const setError = useErrorStore(s => s.setError);
   let reconnectTimeout: number;
   let reconnectAttempts: number = 0;
@@ -23,6 +26,37 @@ const useAppEvents = () => {
       onmessage(event) {
         clearTimeout(reconnectTimeout);
         console.log(event);
+        switch (event.id) {
+          case 'NEW_PTO_REQUEST':
+            const recivedData = JSON.parse(event.data);
+            const newRequestEvent: NewPtoRequestEvent = {
+              id: event.id,
+              ptoRequestId: recivedData.ptoRequestId,
+              applierId: recivedData.applierId,
+              applierFirstName: recivedData.applierFirstName,
+              applierLastName: recivedData.applierLastName,
+              applierEmail: recivedData.applierEmail,
+            };
+            console.log(newRequestEvent)
+            addNotification(newRequestEvent);
+            break;
+
+          case 'PTO_REQUEST_RESOLVED':
+            const resolvedData = JSON.parse(event.data);
+            const requestResolvedEvent: PtoRequestResolvedEvent = {
+              id: event.id,
+              ptoId: resolvedData.ptoId,
+              ptoStart: resolvedData.ptoStart,
+              ptoEnd: resolvedData.ptoEnd,
+              accepted: resolvedData.accepted,
+            };
+            console.log(requestResolvedEvent)
+            addNotification(requestResolvedEvent);
+            break;
+
+          default:
+            console.log(event.data);
+        }
       },
       onclose() {
         console.log('Connection closed by the server');
