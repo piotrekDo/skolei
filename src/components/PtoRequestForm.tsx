@@ -12,7 +12,11 @@ interface FormData {
   daysTotal: number;
 }
 
-export const PtoRequestForm = () => {
+interface Props {
+  isUserDataFetching: boolean;
+}
+
+export const PtoRequestForm = ({isUserDataFetching} : Props) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [dateInvalid, setDateInvalid] = useState(false);
@@ -46,7 +50,7 @@ export const PtoRequestForm = () => {
       setDateInvalid(true);
     }
   };
-
+console.log(isUserDataFetching)
   return (
     <Box maxW={'60%'}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -90,7 +94,7 @@ export const PtoRequestForm = () => {
           <Input type='number' {...register('daysTotal', { valueAsNumber: true, required: true })} />
         </FormControl>
         <Stack spacing={10} p={2}>
-          <Button isDisabled={!formValid || dateInvalid} isLoading={isSubmitting} type='submit' w={'100%'}>
+          <Button isDisabled={!formValid || dateInvalid || isUserDataFetching} isLoading={isSubmitting} type='submit' w={'100%'}>
             Wyślij
           </Button>
         </Stack>

@@ -1,6 +1,6 @@
 import { Box, useToast } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import useUserStore from './service/useUserStore';
 import LoginService, { checkIfTokenIsValid } from './service/LoginService';
@@ -9,12 +9,14 @@ import useAppEvents from './hooks/useAppEvents';
 import useErrorStore from './service/useErrorState';
 import APIclient from './service/APIclient';
 import { BASE_URL } from './config';
+import { BiLogOut } from 'react-icons/bi';
 
 export const App = () => {
   const [userEmail, setUserEmail] = useState('');
   const { subscribe, unsubscribe } = useAppEvents();
-  const { appUser, login } = useUserStore();
+  const { appUser, login, logout } = useUserStore();
   const { error } = useErrorStore();
+  const navigate = useNavigate();
   const toast = useToast();
   const appUserRef = useRef(appUser);
 
@@ -59,6 +61,9 @@ export const App = () => {
       appUserRef.current = appUser;
       setUserEmail(appUser.userEmail);
       subscribe();
+    } else {
+      // logout();
+      // navigate('/')
     }
   }, [appUser]);
 

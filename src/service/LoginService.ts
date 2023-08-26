@@ -26,7 +26,10 @@ class LoginService {
 }
 
 export function checkIfTokenIsValid(appUser: AuthenticationResponse): boolean {
-  return (appUser.jwtExpiresAtTimestamp - new Date().getDate() - 900000) > 0;
+  console.log('expire at', appUser.jwtExpiresAtTimestamp)
+  console.log('expire -15min', appUser.jwtExpiresAtTimestamp - new Date().getTime() - 900000)
+  console.log('current', new Date().getTime())
+  return (appUser.jwtExpiresAtTimestamp - new Date().getTime() - 900000) > 0;
 }
 
 function setLogoutTimer(appUser: AuthenticationResponse, logoutCallback: (mils: number) => void) {

@@ -4,6 +4,7 @@ import { Box, Button, Heading, Stack, VStack } from '@chakra-ui/react';
 import { PtoRaw } from '../model/Pto';
 import { PtoRequestContainer } from '../components/PtoRequestContainer';
 import useAllPtoRequests from '../hooks/useAllPtoRequests';
+import { PtoRequestSekeleton } from '../components/PtoRequestSekeleton';
 
 export const RequestHistory = () => {
   const { appUser } = useUserStore();
@@ -18,12 +19,19 @@ export const RequestHistory = () => {
   console.log(data);
   return (
     <VStack w={'100%'}>
-      {totalRequests === 0 && (
+      {isFetching && (
+        <>
+          <PtoRequestSekeleton />
+          <PtoRequestSekeleton />
+          <PtoRequestSekeleton />
+        </>
+      )}
+      {!isFetching && totalRequests === 0 && (
         <VStack h={'200px'} justifyContent={'center'}>
           <Heading color={'whiteAlpha.700'}>Brak wniosków do wyświetlenia</Heading>
         </VStack>
       )}
-      {totalRequests > 0 && (
+      {!isFetching && totalRequests > 0 && (
         <>
           <Box w={'100%'}>
             {requests.map(request => (
