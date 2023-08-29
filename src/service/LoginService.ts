@@ -26,9 +26,9 @@ class LoginService {
 }
 
 export function checkIfTokenIsValid(appUser: AuthenticationResponse): boolean {
-  console.log('expire at', appUser.jwtExpiresAtTimestamp)
-  console.log('expire -15min', appUser.jwtExpiresAtTimestamp - new Date().getTime() - 900000)
-  console.log('current', new Date().getTime())
+  // console.log('expire at', appUser.jwtExpiresAtTimestamp)
+  // console.log('expire -15min', appUser.jwtExpiresAtTimestamp - new Date().getTime() - 900000)
+  // console.log('current', new Date().getTime())
   return (appUser.jwtExpiresAtTimestamp - new Date().getTime() - 900000) > 0;
 }
 

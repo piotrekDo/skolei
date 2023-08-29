@@ -10,6 +10,7 @@ import { NewPtoRequestPage } from './pages/NewPtoRequestPage';
 import { RequestHistory } from './pages/RequestHistory';
 import { RequestsResolvePage } from './pages/RequestsResolvePage';
 import { ModeratorGuard } from './guards/ModeratorGuard';
+import { CustomCalendar } from './pages/CustomCalendar';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <AuthenticatedGuard><LandingPage /></AuthenticatedGuard> },
       { path: 'home', element: <LoggedGuard><HomePage /></LoggedGuard> },
+      { path: 'calendar', element: <LoggedGuard><CustomCalendar /></LoggedGuard> },
       { path: 'users', element: <LoggedGuard><AppUsersPage /></LoggedGuard> },
       { path: 'applications', element: <LoggedGuard><Applications /></LoggedGuard> },
       { path: 'applications-new', element: <LoggedGuard><NewPtoRequestPage /></LoggedGuard> },

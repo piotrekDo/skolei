@@ -15,19 +15,15 @@ import {
   Stack,
   Link,
   useToast,
-  Tooltip,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { IoNotificationsOutline, IoNotificationsSharp } from 'react-icons/io5';
 import useUserStore from '../service/useUserStore';
 import { NavLink } from 'react-router-dom';
 import useAppNotificationsStore from '../service/useAppNotificationsStore';
-import { NewPtoRequestEvent, PtoRequestResolvedEvent } from '../model/Notification';
 import { NavbarNotifications } from './NavbarNotifications';
 
 export default function Navbar() {
   const toast = useToast();
-  const { notifications } = useAppNotificationsStore();
   const { appUser, logout } = useUserStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -49,6 +45,7 @@ export default function Navbar() {
           <HStack spacing={8} w={'200vw'}>
             <Box>Logo</Box>
             <HStack as={'nav'} spacing={4} px={{ base: 20 }} display={{ base: 'none', md: 'flex' }}>
+            <NavLink to={'/calendar'}>Kalendarz</NavLink>
               {isModerator && <NavLink to={'/users'}>Użytkownicy</NavLink>}
               <Menu>
                 <MenuButton>Wnioski</MenuButton>

@@ -25,7 +25,7 @@ const useAppEvents = () => {
       },
       onmessage(event) {
         clearTimeout(reconnectTimeout);
-        console.log(event);
+        // console.log(event);
         switch (event.id) {
           case 'NEW_PTO_REQUEST':
             const recivedData = JSON.parse(event.data);
@@ -57,7 +57,7 @@ const useAppEvents = () => {
             break;
 
           default:
-            console.log(event.data);
+            // console.log(event.data);
         }
       },
       onclose() {
@@ -85,7 +85,7 @@ const useAppEvents = () => {
   };
 
   const unsubscribe = () => {
-    console.log(eventSource);
+    // console.log(eventSource);
     if (eventSource) {
       eventSource.close();
       eventSource = undefined;
