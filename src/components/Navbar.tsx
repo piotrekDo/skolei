@@ -23,6 +23,7 @@ import useUserStore from '../service/useUserStore';
 import { NavLink } from 'react-router-dom';
 import useAppNotificationsStore from '../service/useAppNotificationsStore';
 import { NewPtoRequestEvent, PtoRequestResolvedEvent } from '../model/Notification';
+import { NavbarNotifications } from './NavbarNotifications';
 
 export default function Navbar() {
   const toast = useToast();
@@ -73,41 +74,7 @@ export default function Navbar() {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Box mx={10}>
-              {notifications.length === 0 && (
-                <Tooltip label='Nie masz nowych powiadomień'>
-                  <Box>
-                    <IoNotificationsOutline size={'2rem'} />
-                  </Box>
-                </Tooltip>
-              )}
-              {notifications.length > 0 && (
-                <Menu>
-                  <MenuButton>
-                    <IoNotificationsSharp size={'2rem'} />
-                  </MenuButton>
-                  <MenuList bg={'facebook.700'}>
-                    {notifications.map((n, index) => (
-                      <Box key={index}>
-                        {n.id === 'NEW_PTO_REQUEST' && (
-                          <Box fontSize={'.8rem'}>
-                            Nowy wniosek {(n as NewPtoRequestEvent).applierFirstName}{' '}
-                            {(n as NewPtoRequestEvent).applierLastName}
-                          </Box>
-                        )}
-                        {n.id === 'PTO_REQUEST_RESOLVED' && (
-                          <Box fontSize={'.8rem'}>
-                            Urlop w dniach {(n as PtoRequestResolvedEvent).ptoStart} -{' '}
-                            {(n as PtoRequestResolvedEvent).ptoEnd} został{' '}
-                            {(n as PtoRequestResolvedEvent).accepted ? 'zaakceptowany' : 'odrzucony'}
-                          </Box>
-                        )}
-                      </Box>
-                    ))}
-                  </MenuList>
-                </Menu>
-              )}
-            </Box>
+                <NavbarNotifications />
 
             <Menu>
               <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>

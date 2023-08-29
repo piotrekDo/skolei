@@ -6,6 +6,7 @@ export interface SseEvent<T> {
 
 export interface Event {
     id: string;
+    dateTime: string;
 }
 
 export interface NewPtoRequestEvent extends Event {

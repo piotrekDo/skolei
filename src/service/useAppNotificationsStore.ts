@@ -3,17 +3,21 @@ import { Event } from '../model/Notification';
 
 interface AppNotificationsStore {
   notifications: Event[];
+  unreadNotifications: number;
   addNotification: (event: Event) => void;
   removeNotification: (event: Event) => void;
   clearNotifications: () => void;
+  clearUnreadNotifications: () => void;
 }
 
 const useAppNotificationsStore = create<AppNotificationsStore>(set => ({
   notifications: [],
+  unreadNotifications: 0,
   addNotification: event =>
     set(store => ({
       ...store,
-      notifications: [...store.notifications, event],
+      notifications: [event, ...store.notifications],
+      unreadNotifications: store.unreadNotifications + 1,
     })),
   removeNotification: event =>
     set(store => ({
@@ -24,6 +28,11 @@ const useAppNotificationsStore = create<AppNotificationsStore>(set => ({
     set(store => ({
       ...store,
       notifications: [],
+    })),
+  clearUnreadNotifications: () =>
+    set(store => ({
+      ...store,
+      unreadNotifications: 0,
     })),
 }));
 

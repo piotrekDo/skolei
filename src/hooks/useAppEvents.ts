@@ -31,6 +31,7 @@ const useAppEvents = () => {
             const recivedData = JSON.parse(event.data);
             const newRequestEvent: NewPtoRequestEvent = {
               id: event.id,
+              dateTime: recivedData.dateTime,
               ptoRequestId: recivedData.ptoRequestId,
               applierId: recivedData.applierId,
               applierFirstName: recivedData.applierFirstName,
@@ -45,6 +46,7 @@ const useAppEvents = () => {
             const resolvedData = JSON.parse(event.data);
             const requestResolvedEvent: PtoRequestResolvedEvent = {
               id: event.id,
+              dateTime: recivedData.dateTime,
               ptoId: resolvedData.ptoId,
               ptoStart: resolvedData.ptoStart,
               ptoEnd: resolvedData.ptoEnd,
